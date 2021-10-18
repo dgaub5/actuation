@@ -1,4 +1,4 @@
-// FILE:   Lab2_cpu01.c
+// FILE:   actuation_cpu01.c
 
 #include "F28x_Project.h"     // Device Header File and Examples Include File
 
