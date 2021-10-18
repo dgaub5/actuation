@@ -1,5 +1,5 @@
 // FILE:   actuation_cpu01.c
-// LOAD TORQUE
+
 #include "F28x_Project.h"     // Device Header File and Examples Include File
 
 // Function Prototypes
