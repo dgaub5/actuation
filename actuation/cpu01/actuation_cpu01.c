@@ -8,8 +8,8 @@ void ConfigureDAC(void);
 // Variables
 #define RESULTS_BUFFER_SIZE 300
 Uint16 dacOutput;
-Uint16 LoadTorque = 0xFFF;
-Uint16 DutyCycle = 0x7FF;
+float LoadTorque = 0.1; 	// {-0.2, 0.2} [Nm]
+float DutyCycle = 100; 		// {0, 100} [%]
 extern int QuadratureTable[40];
 
 
@@ -24,9 +24,14 @@ void main(void)
     // Configure DACs
     ConfigureDAC();
 
+    DutyCycle = (DutyCycle/100)*4095;		// convert floating point number to number of bits between 0 and 4095
+    LoadTorque = (10237.5)*(LoadTorque)+2047.5; // convert floating point number to number of bits between 0 and 4095
+
+    do {
     // Send Load Torque and Duty Cycle to Opal
     DacaRegs.DACVALS.all = LoadTorque;
     DacbRegs.DACVALS.all = DutyCycle;
+    } while(1);
 
 }
 
