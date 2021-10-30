@@ -73,8 +73,6 @@ void main(void)
     // Setup the ADC for ePWM triggered conversions on channel 0
     SetupADCEpwm();
 
-
-
     // Enable PIE interrupt
     PieCtrlRegs.PIEIER1.bit.INTx1 = 1;
 
@@ -82,11 +80,6 @@ void main(void)
     IER |= M_INT1; 			// Enable group 1 interrupts
     EINT;  					// Enable Global interrupt INTM
     ERTM;  					// Enable Global real-time interrupt DBGM
-
-    // Sync ePWM
-    EALLOW;
-    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;
-    EDIS;
 
     // Start ePWM
     EPwm2Regs.TBCTL.bit.CTRMODE = 0; 			// Un-freeze and enter up-count mode
