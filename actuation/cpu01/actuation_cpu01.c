@@ -1,4 +1,14 @@
-// FILE:   actuation_cpu01.c
+// Beginning of File
+
+// File: actuation_cpu01.c
+
+// File Description:
+// This file contains the code for HIL communication with the OPAL-RT
+// to the TI-Microcontoller (This Board). Here this code demonstrates
+// two inputs and two outputs.
+
+// Last Edit: 10/30/2021
+
 
 #include "F28x_Project.h"     // Device Header File and Examples Include File
 
@@ -9,16 +19,18 @@ void ConfigureDAC(void);
 void SetupADCEpwm(void);
 interrupt void adca1_isr(void);
 
-// Variables
+// Variables for output
 #define RESULTS_BUFFER_SIZE 300
 Uint16 AdcaResults[RESULTS_BUFFER_SIZE];
 Uint16 resultsIndex;
 Uint16 ToggleCount = 0;
-Uint16 dacOffset;
-Uint16 dacOutput;
-Uint16 sineEnable = 0;
-extern int QuadratureTable[40];
+Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed rad/s | {0.0 V, 3.3 V}
+Uint16 maCurrent = 0x000;       // {0, 100} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
 
+//Variables for input
+Uint16 dacOutput;
+Uint16 LoadTorque = 0xFFF;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+Uint16 DutyCycle = 0x7FF;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V}
 
 void main(void)
 {
@@ -55,18 +67,13 @@ void main(void)
     // Configure the ePWM
     ConfigureEPWM();
 
-    // Configure DAC-B
+    // Configure DACs
     ConfigureDAC();
 
     // Setup the ADC for ePWM triggered conversions on channel 0
     SetupADCEpwm();
 
-    // Initialize results buffer
-    for(resultsIndex = 0; resultsIndex < RESULTS_BUFFER_SIZE; resultsIndex++)
-    {
-    	AdcaResults[resultsIndex] = 0;
-    }
-    resultsIndex = 0;
+
 
     // Enable PIE interrupt
     PieCtrlRegs.PIEIER1.bit.INTx1 = 1;
@@ -156,28 +163,10 @@ interrupt void adca1_isr(void)
 	{
 		resultsIndex = 0;
 	}
-/*
-	// Toggle GPIO18 so we can read it with the ADC
-	if (ToggleCount++ >= 15)
-	{
-		GpioDataRegs.GPATOGGLE.bit.GPIO30 = 1;
-		ToggleCount = 0;
-	}
-*/
-	// Write to DACB to create input to ADC-A0
-	if (sineEnable != 0)
-	{
-		dacOutput = dacOffset + ((QuadratureTable[resultsIndex % 0x20] ^ 0x8000) >> 5);
-	}
-	else
-	{
-		dacOutput = dacOffset;
-	}
-	DacbRegs.DACVALS.all = dacOutput;
 
 	// Return from interrupt
 	AdcaRegs.ADCINTFLGCLR.bit.ADCINT1 = 1; 		// Clear ADC INT1 flag
 	PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;		// Acknowledge PIE group 1 to enable further interrupts
 }
 
- // end of file
+ // End of File
