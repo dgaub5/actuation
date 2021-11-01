@@ -138,7 +138,7 @@ void ConfigureDAC(void)
 void SetupADCEpwm(void)
 {
 	EALLOW;
-	AdcaRegs.ADCSOC0CTL.bit.CHSEL = 0;  		// SOC0 will convert pin A0
+	AdcaRegs.ADCSOC0CTL.bit.CHSEL = 2;  		// SOC0 will convert pin A2
 	AdcaRegs.ADCSOC0CTL.bit.ACQPS = 14; 		// Sample window is 100 SYSCLK cycles
 	AdcaRegs.ADCSOC0CTL.bit.TRIGSEL = 7; 		// Trigger on ePWM2 SOCA/C
 	AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0; 		// End of SOC0 will set INT1 flag
