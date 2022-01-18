@@ -1,37 +1,36 @@
+// ----------------------------------------------------------------------------- //
 // Beginning of File
-
+//
 // File: actuation_cpu01.c
-
+//
 // File Description:
 // This file contains the code for HIL communication with the OPAL-RT
 // to the TI-Microcontoller (This Board). Here this code demonstrates
 // two inputs and two outputs.
+//
+// Last Edit: 01/18/2022
+//
+// ----------------------------------------------------------------------------- //
 
-// Last Edit: 12/06/2021
+#include "F28x_Project.h"       // Device Header File and Examples Include File
 
-#include "F28x_Project.h"           // Device Header File and Examples Include File
-
-// Variables for output
-Uint16 resultsIndex;
-Uint16 ToggleCount = 0;
+// Initialize the variables for output
+Uint16 resultsIndex;            // Variable for holding the results buffer
 Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed rad/s | {0.0 V, 3.3 V}
 Uint16 maCurrent = 0x000;       // {0, 100} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
 
-//Variables for input
-Uint16 dacOutput;
+// Initialize the variables for input
 Uint16 LoadTorque = 0xFFF;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
 Uint16 DutyCycle = 0x7FF;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
-
 
 // Definitions for PWM generation
 #define PWM1_PERIOD 0xC350          // PWM1 frequency = 2kHz
 #define PWM1_CMPR25 PWM1_PERIOD>>2  // PWM1 initial duty cycle = 25%
 
 // Function Prototypes
-void ConfigureADC(void);
-void ConfigureDAC(void);
-void ConfigureEPWM(void);
-void SetupADCEpwm(void);
+void ConfigureADC(void);            // Write ADC configurations and power up the ADC for both ADC A and ADC C
+void ConfigureDAC(void);            // Write DAC configurations and power up the DAC for both DAC A and DAC C
+void SetupADCEpwm(void);            // Select the channels to convert and end of conversion flag for the Pulse Width Modulator
 void InitEPwm1(void);               // Configure ePWM module 1
 void InitEPwm2(void);               // Configure ePWM module 2
 void InitEPwm5(void);               // Configure ePWM module 5
@@ -44,18 +43,16 @@ Uint16 dutyCycle5 = PWM1_CMPR25;    // PWM5 duty cycle = 25%
 Uint16 phaseOffset5 = 0;            // PWM5 phase offset = 0
 
 // Buffers for storing ADC conversion results
-#define RESULTS_BUFFER_SIZE 256
-Uint16 AdcaResults[RESULTS_BUFFER_SIZE];
-Uint16 AdccResults[RESULTS_BUFFER_SIZE];
-Uint16 resultsIndex;
-Uint16 pretrig = 0;
-Uint16 trigger = 0;
+#define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
+Uint16 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers
+Uint16 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers
+Uint16 pretrig = 0;                         // The pretrig variable helps identifies a low-to-high transition on PWM1A
+Uint16 trigger = 0;                         // The trigger variable helps identifies a low-to-high transition on PWM1A
 
-
+// Beginning the main section of code
 void main(void)
 {
-    // Initialize System Control
-    InitSysCtrl();
+    InitSysCtrl();      // Initialize System Control
     EALLOW;
     ClkCfgRegs.PERCLKDIVSEL.bit.EPWMCLKDIV = 1;
     EDIS;
@@ -93,8 +90,8 @@ void main(void)
     InitEPwm2();
     InitEPwm5();
 
-    // Configure DACs
-    ConfigureDAC();
+    // Configure DAC registers
+    ConfigureDAC();     // Call the ConfigureDAC function
 
     // Initialize results buffers
     for(resultsIndex = 0; resultsIndex < RESULTS_BUFFER_SIZE; resultsIndex++)
@@ -137,7 +134,6 @@ void ConfigureDAC(void)
     DacaRegs.DACCTL.bit.DACREFSEL = 1;          // Use ADC references (HSEC Pin 09)
     DacaRegs.DACCTL.bit.LOADMODE = 0;           // Load on next SYSCLK
     DacaRegs.DACOUTEN.bit.DACOUTEN = 1;         // Enable DAC
-    //AdccRegs.ADCSOC0CTL.bit.CHSEL = 5;          // SOC0 will convert pin C5 (HSEC Pin 39)
     DacbRegs.DACCTL.bit.DACREFSEL = 1;          // Use ADC references (HSEC Pin 11)
     DacbRegs.DACCTL.bit.LOADMODE = 0;           // Load on next SYSCLK
     DacbRegs.DACOUTEN.bit.DACOUTEN = 1;         // Enable DAC
@@ -290,4 +286,6 @@ interrupt void adca1_isr(void)
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;     // Acknowledge PIE group 1 to enable further interrupts
 }
 
- // End of file
+// ----------------------------------------------------------------------------- //
+// End of file
+// ----------------------------------------------------------------------------- //
