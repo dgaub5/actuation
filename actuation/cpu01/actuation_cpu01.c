@@ -4,9 +4,8 @@
 // File: actuation_cpu01.c
 //
 // File Description:
-// This file contains the code for HIL communication with the OPAL-RT
-// to the TI-Microcontoller (This Board). Here this code demonstrates
-// two inputs and two outputs.
+// This file contains the code for HIL communication with the OPAL-RT to the 
+// TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
 //
 // Last Edit: 01/18/2022
 //
