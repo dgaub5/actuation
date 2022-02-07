@@ -18,11 +18,14 @@ Uint16 resultsIndex;            // Initialization for the results index
 Uint16 ToggleCount = 0;         // Initialize the count toggle
 Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed rad/s | {0.0 V, 3.3 V}
 Uint16 maCurrent = 0x000;       // {0, 100} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
+// On Dual Time Graph Output
+// - mmSpeed is offset at +600, so 1200 = 600 and 600 = 0
+// -maCurrent is offset at +2.5, so 5 = 2.5 and 2.5 = 0
 
 //Variables for input
 Uint16 dacOutput;               // Initialize variable for the DAC Outputs
-Uint16 LoadTorque = 0xFFF;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
-Uint16 DutyCycle = 0x7FF;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
+Uint16 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+Uint16 DutyCycle = 0x7AA;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
 
 
 // Definitions for PWM generation
@@ -169,7 +172,7 @@ void SetupADCEpwm(void)
 {
     // Select the channels to convert and end of conversion flag
     EALLOW;                                     // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
-    AdcaRegs.ADCSOC0CTL.bit.CHSEL = 2;          // SOC0 will convert pin A0 (HSEC Pin 15)
+    AdcaRegs.ADCSOC0CTL.bit.CHSEL = 2;          // SOC0 will convert pin A2 (HSEC Pin 15)
     AdcaRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
     AdcaRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
     AdcaRegs.ADCINTSEL1N2.bit.INT1SEL = 0;      // End of SOC0 will set INT1 flag
@@ -257,8 +260,10 @@ interrupt void adca1_isr(void)
     // Read the ADC result and store in circular buffer
     if (trigger != 0)
     {
-        AdcaResults[resultsIndex] = AdcaResultRegs.ADCRESULT0;      // Get the Adca values
-        AdccResults[resultsIndex++] = AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc
+        AdcaResults[resultsIndex] = 0.293 * AdcaResultRegs.ADCRESULT0;      // Get the Adca values, offset by +600
+        //AdcaResults[resultsIndex] = AdcaResultRegs.ADCRESULT0;      // Get the Adca values
+        AdccResults[resultsIndex++] = 0.00122 * AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc, offset by +2.5
+        //AdccResults[resultsIndex++] = AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc
         if(RESULTS_BUFFER_SIZE <= resultsIndex)                     // Loop while the results buffer is less than or equal to the results index
         {
             resultsIndex = 0;                        // Set the results index to 0
