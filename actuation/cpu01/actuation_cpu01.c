@@ -189,12 +189,12 @@ void SetupADCEpwm(void)
     AdccRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
 
     // Also setup ADC-B0 in this example
-    AdcbRegs.ADCSOC0CTL.bit.CHSEL = 0;          // SOC0 will convert pin C3 (HSEC Pin 14)
+    AdcbRegs.ADCSOC0CTL.bit.CHSEL = 0;          // SOC0 will convert pin B0 (HSEC Pin 12)
     AdcbRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
     AdcbRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
 
     // Also setup ADC-D3 in this example
-    AdcdRegs.bDCSOC0CTL.bit.CHSEL = 3;          // SOC0 will convert pin C3 (HSEC Pin 36)
+    AdcdRegs.ADCSOC0CTL.bit.CHSEL = 3;          // SOC0 will convert pin D3 (HSEC Pin 36)
     AdcdRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
     AdcdRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
     EDIS;                                       // Using EDIS to clear the EALLOW
