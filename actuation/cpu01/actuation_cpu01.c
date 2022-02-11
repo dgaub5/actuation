@@ -7,7 +7,7 @@
 // This file contains the code for HIL communication with the OPAL-RT to the
 // TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
 //
-// Last Edit: 01/25/2022
+// Last Edit: 02/11/2022
 //
 // ----------------------------------------------------------------------------- //
 
@@ -51,7 +51,9 @@ Uint16 phaseOffset5 = 0;            // PWM5 phase offset = 0
 // Buffers for storing ADC conversion results
 #define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
 Uint16 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers
+Uint16 AdcbResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcb registers
 Uint16 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers
+Uint16 AdcdResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcd registers
 Uint16 resultsIndex;                        // Initialize the Results Index
 Uint16 pretrig = 0;                         // Set the value of pretrig
 Uint16 trigger = 0;                         // Set the value of trigger
@@ -100,7 +102,9 @@ void main(void)
     for(resultsIndex = 0; resultsIndex < RESULTS_BUFFER_SIZE; resultsIndex++)
     {
         AdcaResults[resultsIndex] = 0;      // Set Adca current results index to 0
+        AdcbResults[resultsIndex] = 0;      // Set Adcb current results index to 0
         AdccResults[resultsIndex] = 0;      // Set Adcc current results index to 0
+        AdcdResults[resultsIndex] = 0;      // Set Adcd current results index to 0
     }
     resultsIndex = 0;   // Reset the results index counter
 
@@ -156,12 +160,27 @@ void ConfigureADC(void)
     AdcaRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
     AdcaRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
 
+    // ADC-B
+    AdcbRegs.ADCCTL2.bit.PRESCALE = 6;          // Set ADCCLK divider to /4
+    AdcbRegs.ADCCTL2.bit.RESOLUTION =  0;       // 12-bit resolution RESOLUTION_12BIT;
+    AdcbRegs.ADCCTL2.bit.SIGNALMODE = 0;        // Single-ended channel conversions (12-bit mode only)
+    AdcbRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
+    AdcbRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
+
     // ADC-C
     AdccRegs.ADCCTL2.bit.PRESCALE = 6;          // Set ADCCLK divider to /4
     AdccRegs.ADCCTL2.bit.RESOLUTION =  0;       // 12-bit resolution RESOLUTION_12BIT;
     AdccRegs.ADCCTL2.bit.SIGNALMODE = 0;        // Single-ended channel conversions (12-bit mode only)
     AdccRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
     AdccRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
+
+    // ADC-D
+    AdcdRegs.ADCCTL2.bit.PRESCALE = 6;          // Set ADCCLK divider to /4
+    AdcdRegs.ADCCTL2.bit.RESOLUTION =  0;       // 12-bit resolution RESOLUTION_12BIT;
+    AdcdRegs.ADCCTL2.bit.SIGNALMODE = 0;        // Single-ended channel conversions (12-bit mode only)
+    AdcdRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
+    AdcdRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
+
     EDIS;                                       // Using EDIS to clear the EALLOW
 
     DELAY_US(1000);                             // Delay for 1ms to allow ADC time to power up
@@ -183,6 +202,16 @@ void SetupADCEpwm(void)
     AdccRegs.ADCSOC0CTL.bit.CHSEL = 3;          // SOC0 will convert pin C3 (HSEC Pin 33)
     AdccRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
     AdccRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
+
+    // Also setup ADC-B0 in this example
+    AdcbRegs.ADCSOC0CTL.bit.CHSEL = 0;          // SOC0 will convert pin C3 (HSEC Pin 14)
+    AdcbRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
+    AdcbRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
+
+    // Also setup ADC-D3 in this example
+    AdcdRegs.bDCSOC0CTL.bit.CHSEL = 3;          // SOC0 will convert pin C3 (HSEC Pin 36)
+    AdcdRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
+    AdcdRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
     EDIS;                                       // Using EDIS to clear the EALLOW
 }
 
@@ -261,9 +290,9 @@ interrupt void adca1_isr(void)
     if (trigger != 0)
     {
         AdcaResults[resultsIndex] = 0.293 * AdcaResultRegs.ADCRESULT0;      // Get the Adca values, offset by +600
-        //AdcaResults[resultsIndex] = AdcaResultRegs.ADCRESULT0;      // Get the Adca values
         AdccResults[resultsIndex++] = 0.00122 * AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc, offset by +2.5
-        //AdccResults[resultsIndex++] = AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc
+        AdcbResults[resultsIndex++] = AdcbResultRegs.ADCRESULT0;    // Get the next values from cRIO - Load Torque
+        AdcdResults[resultsIndex++] = AdcdResultRegs.ADCRESULT0;    // Get the next values from cRIO - Duty Cycle
         if(RESULTS_BUFFER_SIZE <= resultsIndex)                     // Loop while the results buffer is less than or equal to the results index
         {
             resultsIndex = 0;                        // Set the results index to 0
