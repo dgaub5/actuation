@@ -7,7 +7,7 @@
 // This file contains the code for HIL communication with the OPAL-RT to the
 // TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
 //
-// Last Edit: 02/14/2022
+// Last Edit: 01/25/2022
 //
 // ----------------------------------------------------------------------------- //
 
@@ -18,18 +18,16 @@ Uint16 resultsIndex;            // Initialization for the results index
 Uint16 ToggleCount = 0;         // Initialize the count toggle
 Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed rad/s | {0.0 V, 3.3 V}
 Uint16 maCurrent = 0x000;       // {-2.5, 2.5} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
-// On Dual Time Graph Output
-// - mmSpeed is offset at +600, so 1200 = 600 and 600 = 0
-// - maCurrent is offset at +2.5, so 5 = 2.5 and 2.5 = 0
 
 //Variables for input
 Uint16 dacOutput;               // Initialize variable for the DAC Outputs
-Uint16 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
-Uint16 DutyCycle = 0x7AA;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
+//Uint16 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+volatile float32 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+volatile float32 DutyCycle = 0x7AA;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
 
 
 // Definitions for PWM generation
-#define PWM1_PERIOD 0xC350          // PWM1 frequency = 2kHz
+#define PWM1_PERIOD 0xC350          // PWM1 frequency = 50 kHz
 #define PWM1_CMPR25 PWM1_PERIOD>>2  // PWM1 initial duty cycle = 25%
 
 // Function Prototypes
@@ -50,8 +48,8 @@ Uint16 phaseOffset5 = 0;            // PWM5 phase offset = 0
 
 // Buffers for storing ADC conversion results
 #define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
-float32 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers
-float32 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers
+float32 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers (motor speed)
+float32 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers (armature current)
 Uint16 resultsIndex;                        // Initialize the Results Index
 Uint16 pretrig = 0;                         // Set the value of pretrig
 Uint16 trigger = 0;                         // Set the value of trigger
@@ -144,7 +142,7 @@ void ConfigureDAC(void)
     EDIS;                                       // Using EDIS to clear the EALLOW
 }
 
-// Write ADC configurations and power up the ADC for both ADC A and ADC C
+// Write ADC configurations and power up the ADC
 void ConfigureADC(void)
 {
     EALLOW;     // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
@@ -162,6 +160,20 @@ void ConfigureADC(void)
     AdccRegs.ADCCTL2.bit.SIGNALMODE = 0;        // Single-ended channel conversions (12-bit mode only)
     AdccRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
     AdccRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
+
+    // ADC-B
+    AdcbRegs.ADCCTL2.bit.PRESCALE = 6;          // Set ADCCLK divider to /4
+    AdcbRegs.ADCCTL2.bit.RESOLUTION =  0;       // 12-bit resolution RESOLUTION_12BIT;
+    AdcbRegs.ADCCTL2.bit.SIGNALMODE = 0;        // Single-ended channel conversions (12-bit mode only)
+    AdcbRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
+    AdcbRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
+
+    // ADC-D
+    AdcdRegs.ADCCTL2.bit.PRESCALE = 6;          // Set ADCCLK divider to /4
+    AdcdRegs.ADCCTL2.bit.RESOLUTION =  0;       // 12-bit resolution RESOLUTION_12BIT;
+    AdcdRegs.ADCCTL2.bit.SIGNALMODE = 0;        // Single-ended channel conversions (12-bit mode only)
+    AdcdRegs.ADCCTL1.bit.INTPULSEPOS = 1;       // Set pulse positions to late
+    AdcdRegs.ADCCTL1.bit.ADCPWDNZ = 1;          // Power up the ADC
     EDIS;                                       // Using EDIS to clear the EALLOW
 
     DELAY_US(1000);                             // Delay for 1ms to allow ADC time to power up
@@ -183,6 +195,16 @@ void SetupADCEpwm(void)
     AdccRegs.ADCSOC0CTL.bit.CHSEL = 3;          // SOC0 will convert pin C3 (HSEC Pin 33)
     AdccRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
     AdccRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
+
+    // Also setup ADC-B1 in this example
+    AdcbRegs.ADCSOC0CTL.bit.CHSEL = 0;          // SOC0 will convert pin B0 (HSEC Pin 12)
+    AdcbRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
+    AdcbRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
+
+    // Also setup ADC-D3 in this example
+    AdcdRegs.ADCSOC0CTL.bit.CHSEL = 3;          // SOC0 will convert pin D3 (HSEC Pin 36)
+    AdcdRegs.ADCSOC0CTL.bit.ACQPS = 14;         // Sample window is 100 SYSCLK cycles
+    AdcdRegs.ADCSOC0CTL.bit.TRIGSEL = 7;        // Trigger on ePWM2 SOCA/C
     EDIS;                                       // Using EDIS to clear the EALLOW
 }
 
@@ -261,9 +283,9 @@ interrupt void adca1_isr(void)
     if (trigger != 0)
     {
         AdcaResults[resultsIndex] = 0.293 * (AdcaResultRegs.ADCRESULT0-2048);      // Get the Adca values, offset by +600
-        //AdcaResults[resultsIndex] = AdcaResultRegs.ADCRESULT0;      // Get the Adca values
+        DutyCycle = AdcbResultRegs.ADCRESULT0;      // Get the Adcb values
         AdccResults[resultsIndex++] = 0.00122 * (AdccResultRegs.ADCRESULT0-2048);    // Get the next values of Adcc, offset by +2.5
-        //AdccResults[resultsIndex++] = AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc
+        LoadTorque = AdcdResultRegs.ADCRESULT0;    // Get the next values of Adcd
         if(RESULTS_BUFFER_SIZE <= resultsIndex)                     // Loop while the results buffer is less than or equal to the results index
         {
             resultsIndex = 0;                        // Set the results index to 0
