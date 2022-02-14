@@ -7,7 +7,7 @@
 // This file contains the code for HIL communication with the OPAL-RT to the
 // TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
 //
-// Last Edit: 01/25/2022
+// Last Edit: 02/14/2022
 //
 // ----------------------------------------------------------------------------- //
 
@@ -17,7 +17,7 @@
 Uint16 resultsIndex;            // Initialization for the results index
 Uint16 ToggleCount = 0;         // Initialize the count toggle
 Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed rad/s | {0.0 V, 3.3 V}
-Uint16 maCurrent = 0x000;       // {0, 100} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
+Uint16 maCurrent = 0x000;       // {-2.5, 2.5} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
 // On Dual Time Graph Output
 // - mmSpeed is offset at +600, so 1200 = 600 and 600 = 0
 // -maCurrent is offset at +2.5, so 5 = 2.5 and 2.5 = 0
@@ -50,8 +50,8 @@ Uint16 phaseOffset5 = 0;            // PWM5 phase offset = 0
 
 // Buffers for storing ADC conversion results
 #define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
-Uint16 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers
-Uint16 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers
+float32 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers
+float32 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers
 Uint16 resultsIndex;                        // Initialize the Results Index
 Uint16 pretrig = 0;                         // Set the value of pretrig
 Uint16 trigger = 0;                         // Set the value of trigger
@@ -260,9 +260,9 @@ interrupt void adca1_isr(void)
     // Read the ADC result and store in circular buffer
     if (trigger != 0)
     {
-        AdcaResults[resultsIndex] = 0.293 * AdcaResultRegs.ADCRESULT0;      // Get the Adca values, offset by +600
+        AdcaResults[resultsIndex] = 0.293 * (AdcaResultRegs.ADCRESULT0-2048);      // Get the Adca values, offset by +600
         //AdcaResults[resultsIndex] = AdcaResultRegs.ADCRESULT0;      // Get the Adca values
-        AdccResults[resultsIndex++] = 0.00122 * AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc, offset by +2.5
+        AdccResults[resultsIndex++] = 0.00122 * (AdccResultRegs.ADCRESULT0-2048);    // Get the next values of Adcc, offset by +2.5
         //AdccResults[resultsIndex++] = AdccResultRegs.ADCRESULT0;    // Get the next values of Adcc
         if(RESULTS_BUFFER_SIZE <= resultsIndex)                     // Loop while the results buffer is less than or equal to the results index
         {
