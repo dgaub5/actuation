@@ -20,7 +20,7 @@ Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed 
 Uint16 maCurrent = 0x000;       // {-2.5, 2.5} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
 // On Dual Time Graph Output
 // - mmSpeed is offset at +600, so 1200 = 600 and 600 = 0
-// -maCurrent is offset at +2.5, so 5 = 2.5 and 2.5 = 0
+// - maCurrent is offset at +2.5, so 5 = 2.5 and 2.5 = 0
 
 //Variables for input
 Uint16 dacOutput;               // Initialize variable for the DAC Outputs
