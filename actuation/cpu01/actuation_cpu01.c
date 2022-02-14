@@ -24,8 +24,9 @@ Uint16 maCurrent = 0x000;       // {-2.5, 2.5} [A] - Motor Armature Current in A
 
 //Variables for input
 Uint16 dacOutput;               // Initialize variable for the DAC Outputs
-Uint16 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
-Uint16 DutyCycle = 0x7AA;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
+//Uint16 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+volatile float32 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+volatile float32 DutyCycle = 0x7AA;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
 
 
 // Definitions for PWM generation
@@ -49,10 +50,10 @@ Uint16 dutyCycle5 = PWM1_CMPR25;    // PWM5 duty cycle = 25%
 Uint16 phaseOffset5 = 0;            // PWM5 phase offset = 0
 
 // Buffers for storing ADC conversion results
-#define RESULTS_BUFFER_SIZE 128             // Set the max buffer size of the results to 256 bits
-Uint16 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers
-Uint16 AdcbResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcb registers
-float32 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers
+#define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
+float32 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers (motor speed)
+//Uint16 AdcbResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcb registers
+float32 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers (armature current)
 //float32 AdcdResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcd registers
 Uint16 resultsIndex;                        // Initialize the Results Index
 Uint16 pretrig = 0;                         // Set the value of pretrig
@@ -102,7 +103,7 @@ void main(void)
     for(resultsIndex = 0; resultsIndex < RESULTS_BUFFER_SIZE; resultsIndex++)
     {
         AdcaResults[resultsIndex] = 0;      // Set Adca current results index to 0
-        AdcbResults[resultsIndex] = 0;      // Set Adcb current results index to 0
+        //AdcbResults[resultsIndex] = 0;      // Set Adcb current results index to 0
         AdccResults[resultsIndex] = 0;      // Set Adcc current results index to 0
         //AdcdResults[resultsIndex] = 0;      // Set Adcd current results index to 0
     }
@@ -148,7 +149,7 @@ void ConfigureDAC(void)
     EDIS;                                       // Using EDIS to clear the EALLOW
 }
 
-// Write ADC configurations and power up the ADC for both ADC A and ADC C
+// Write ADC configurations and power up the ADC
 void ConfigureADC(void)
 {
     EALLOW;     // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
@@ -289,9 +290,9 @@ interrupt void adca1_isr(void)
     if (trigger != 0)
     {
         AdcaResults[resultsIndex] = 0.293 * (AdcaResultRegs.ADCRESULT0-2048);      // Get the Adca values, offset by +600
-        AdcbResults[resultsIndex] = AdcaResultRegs.ADCRESULT0;      // Get the Adcb values
-        AdccResults[resultsIndex] = 0.00122 * (AdccResultRegs.ADCRESULT0-2048);    // Get the next values of Adcc, offset by +2.5
-        AdcdResults[resultsIndex++] = AdccResultRegs.ADCRESULT0;    // Get the next values of Adcd
+        DutyCycle = AdcbResultRegs.ADCRESULT0;      // Get the Adcb values
+        AdccResults[resultsIndex++] = 0.00122 * (AdccResultRegs.ADCRESULT0-2048);    // Get the next values of Adcc, offset by +2.5
+        LoadTorque = AdcdResultRegs.ADCRESULT0;    // Get the next values of Adcd
         if(RESULTS_BUFFER_SIZE <= resultsIndex)                     // Loop while the results buffer is less than or equal to the results index
         {
             resultsIndex = 0;                        // Set the results index to 0
