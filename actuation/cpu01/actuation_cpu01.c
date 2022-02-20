@@ -7,7 +7,7 @@
 // This file contains the code for HIL communication with the OPAL-RT to the
 // TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
 //
-// Last Edit: 01/25/2022
+// Last Edit: 02/19/2022
 //
 // ----------------------------------------------------------------------------- //
 
