@@ -7,7 +7,7 @@
 // This file contains the code for HIL communication with the OPAL-RT to the
 // TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
 //
-// Last Edit: 01/25/2022
+// Last Edit: 02/19/2022
 //
 // ----------------------------------------------------------------------------- //
 
@@ -18,19 +18,15 @@ Uint16 resultsIndex;            // Initialization for the results index
 Uint16 ToggleCount = 0;         // Initialize the count toggle
 Uint16 mmSpeed = 0x000;         // {-600, 600} [rad/s] - Motor Mechanical Speed rad/s | {0.0 V, 3.3 V}
 Uint16 maCurrent = 0x000;       // {-2.5, 2.5} [A] - Motor Armature Current in A | {0.0 V, 3.3 V}
-// On Dual Time Graph Output
-// - mmSpeed is offset at +600, so 1200 = 600 and 600 = 0
-// - maCurrent is offset at +2.5, so 5 = 2.5 and 2.5 = 0
 
 //Variables for input
-Uint16 dacOutput;               // Initialize variable for the DAC Outputs
-//Uint16 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+Uint16 dacOutput;                         // Initialize variable for the DAC Outputs
 volatile float32 LoadTorque = 0x7AA;      // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
 volatile float32 DutyCycle = 0x7AA;       // {0, 100} [%]  - Load Torque in % | {0.0 V, 3.0 V} --> 0x7FF = 50
 
 
 // Definitions for PWM generation
-#define PWM1_PERIOD 0xC350          // PWM1 frequency = 2kHz
+#define PWM1_PERIOD 0xC350          // PWM1 frequency = 50 kHz
 #define PWM1_CMPR25 PWM1_PERIOD>>2  // PWM1 initial duty cycle = 25%
 
 // Function Prototypes
@@ -51,10 +47,8 @@ Uint16 phaseOffset5 = 0;            // PWM5 phase offset = 0
 
 // Buffers for storing ADC conversion results
 #define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
-float32 AdcaResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adca registers (motor speed)
-//Uint16 AdcbResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcb registers
-float32 AdccResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcc registers (armature current)
-//float32 AdcdResults[RESULTS_BUFFER_SIZE];    // Allocate memory for the Adcd registers
+float32 AdcaResults[RESULTS_BUFFER_SIZE];   // Allocate memory for the Adca registers (motor speed)
+float32 AdccResults[RESULTS_BUFFER_SIZE];   // Allocate memory for the Adcc registers (armature current)
 Uint16 resultsIndex;                        // Initialize the Results Index
 Uint16 pretrig = 0;                         // Set the value of pretrig
 Uint16 trigger = 0;                         // Set the value of trigger
@@ -62,10 +56,10 @@ Uint16 trigger = 0;                         // Set the value of trigger
 // Beginning of the main section of code
 void main(void)
 {
-    InitSysCtrl();                  // Initialize System Control
-    EALLOW;                         // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
+    InitSysCtrl();                              // Initialize System Control
+    EALLOW;                                     // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
     ClkCfgRegs.PERCLKDIVSEL.bit.EPWMCLKDIV = 1; //Enable Clock Configure Registers
-    EDIS;                           // Using EDIS to clear the EALLOW
+    EDIS;                                       // Using EDIS to clear the EALLOW
 
     // Initialize GPIO
     InitGpio();         // Configure default GPIO
@@ -86,7 +80,7 @@ void main(void)
     // Map ISR functions
     EALLOW;                                      // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
     PieVectTable.ADCA1_INT = &adca1_isr;         // Function for ADCA interrupt 1
-    EDIS;               // Using EDIS to clear the EALLOW
+    EDIS;                                       // Using EDIS to clear the EALLOW
 
     ConfigureADC();     // Configure the ADC and power it up
 
@@ -103,9 +97,7 @@ void main(void)
     for(resultsIndex = 0; resultsIndex < RESULTS_BUFFER_SIZE; resultsIndex++)
     {
         AdcaResults[resultsIndex] = 0;      // Set Adca current results index to 0
-        //AdcbResults[resultsIndex] = 0;      // Set Adcb current results index to 0
         AdccResults[resultsIndex] = 0;      // Set Adcc current results index to 0
-        //AdcdResults[resultsIndex] = 0;      // Set Adcd current results index to 0
     }
     resultsIndex = 0;   // Reset the results index counter
 
@@ -117,8 +109,8 @@ void main(void)
     PieCtrlRegs.PIEIER1.bit.INTx1 = 1;      // Enable PIE interrupt
 
     // Sync ePWM
-    EALLOW;     // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
-    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;   // Set CPU System Regesters to active bit
+    EALLOW;                                 // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
+    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;   // Set CPU System Registers to active bit
 
     // Start ePWM
     EPwm2Regs.ETSEL.bit.SOCAEN = 1;             // Enable SOCA
@@ -283,16 +275,16 @@ void InitEPwm5(void)
    EPwm5Regs.AQCTLA.bit.CAU = 1;                // Clear PWM1A on event A, up count
 }
 
-// Function to interupt the isr of ADCa 1
+// Function to interrupt the ISR of ADCa 1
 interrupt void adca1_isr(void)
 {
     // Read the ADC result and store in circular buffer
     if (trigger != 0)
     {
         AdcaResults[resultsIndex] = 0.293 * (AdcaResultRegs.ADCRESULT0-2048);      // Get the Adca values, offset by +600
-        DutyCycle = AdcbResultRegs.ADCRESULT0;      // Get the Adcb values
+        DutyCycle = AdcbResultRegs.ADCRESULT0;        // Get the Adcb values
         AdccResults[resultsIndex++] = 0.00122 * (AdccResultRegs.ADCRESULT0-2048);    // Get the next values of Adcc, offset by +2.5
-        LoadTorque = AdcdResultRegs.ADCRESULT0;    // Get the next values of Adcd
+        LoadTorque = AdcdResultRegs.ADCRESULT0;      // Get the next values of Adcd
         if(RESULTS_BUFFER_SIZE <= resultsIndex)                     // Loop while the results buffer is less than or equal to the results index
         {
             resultsIndex = 0;                        // Set the results index to 0
