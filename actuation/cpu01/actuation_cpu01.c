@@ -110,7 +110,7 @@ void main(void)
 
     // Sync ePWM
     EALLOW;                                 // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
-    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;   // Set CPU System Regesters to active bit
+    CpuSysRegs.PCLKCR0.bit.TBCLKSYNC = 1;   // Set CPU System Registers to active bit
 
     // Start ePWM
     EPwm2Regs.ETSEL.bit.SOCAEN = 1;             // Enable SOCA
@@ -275,7 +275,7 @@ void InitEPwm5(void)
    EPwm5Regs.AQCTLA.bit.CAU = 1;                // Clear PWM1A on event A, up count
 }
 
-// Function to interupt the isr of ADCa 1
+// Function to interrupt the ISR of ADCa 1
 interrupt void adca1_isr(void)
 {
     // Read the ADC result and store in circular buffer
