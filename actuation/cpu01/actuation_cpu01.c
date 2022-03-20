@@ -53,9 +53,16 @@ Uint16 resultsIndex;                        // Initialize the Results Index
 Uint16 pretrig = 0;                         // Set the value of pretrig
 Uint16 trigger = 0;                         // Set the value of trigger
 
+// Setting up data transfer for --gen_profile_info code coverage
+extern void _TI_stop_pprof_collection(void);
+
 // Beginning of the main section of code
+
+#include<stdio.h>
+#include<string.h>
 void main(void)
 {
+
     InitSysCtrl();                              // Initialize System Control
     EALLOW;                                     // (Bit 6) — Emulation access enable bit - Enable access to emulation and other protected registers
     ClkCfgRegs.PERCLKDIVSEL.bit.EPWMCLKDIV = 1; //Enable Clock Configure Registers
@@ -125,6 +132,7 @@ void main(void)
         // Send Load Torque and Duty Cycle to Opal
         DacaRegs.DACVALS.all = LoadTorque;      // Set the value of the DAC A Registers to Load Torque
         DacbRegs.DACVALS.all = DutyCycle;       // Set the value of the DAC B Registers to Duty Cycle
+        _TI_stop_pprof_collection();
     } while(1);
 }
 
