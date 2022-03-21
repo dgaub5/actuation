@@ -7,7 +7,7 @@
     // This file contains the code for HIL communication with the OPAL-RT to the
     // TI-Microcontoller (This Board). Here this code demonstrates two inputs and two outputs.
     //
-    // Last Edit: 03/21/2022
+    // Last Edit: 02/28/2022
     //
     //
     // Input Variables:
@@ -130,7 +130,7 @@
             // Send Load Torque and Duty Cycle to Opal
             DacaRegs.DACVALS.all = LoadTorque;      // Set the value of the DAC-A Registers to Load Torque
             DacbRegs.DACVALS.all = DutyCycle;       // Set the value of the DAC-B Registers to Duty Cycle
-            _TI_stop_pprof_collection();            // Add a call to _TI_stop_pprof_collection at the point in which you wish to transfer the coverage data
+            //_TI_stop_pprof_collection();            // Add a call to _TI_stop_pprof_collection at the point in which you wish to transfer the coverage data
         } while(1);
     }
 
