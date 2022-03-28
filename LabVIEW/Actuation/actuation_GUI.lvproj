@@ -1,5 +1,6 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
 <Project Type="Project" LVVersion="17008000">
+	<Property Name="SMProvider.SMVersion" Type="Int">201310</Property>
 	<Property Name="varPersistentID:{10306F5E-D7BB-4F3C-B461-BBCEE25117F3}" Type="Ref">/Minigrid-cRIO-87/Chassis/Real-Time Scan Resources/Mod1/AO4</Property>
 	<Property Name="varPersistentID:{2154CE20-8E3C-46FC-BC78-5D9049E3CE6F}" Type="Ref">/Minigrid-cRIO-87/Chassis/Real-Time Scan Resources/Mod1/AI7</Property>
 	<Property Name="varPersistentID:{31A757FA-CA9A-4B3D-89BE-BAB20374B33D}" Type="Ref">/Minigrid-cRIO-87/Chassis/Real-Time Scan Resources/Mod1/AO3</Property>
