@@ -1,0 +1,221 @@
+\doxysection{actuation-\/main/actuation/cpu01/actuation\+\_\+cpu01.c File Reference}
+\label{actuation__cpu01_8c}\index{actuation-\/main/actuation/cpu01/actuation\_cpu01.c@{actuation-\/main/actuation/cpu01/actuation\_cpu01.c}}
+{\ttfamily \#include \char`\"{}F28x\+\_\+\+Project.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \textbf{ PWM1\+\_\+\+PERIOD}~0x\+C350
+\item 
+\#define \textbf{ PWM1\+\_\+\+CMPR25}~\textbf{ PWM1\+\_\+\+PERIOD}$>$$>$2
+\item 
+\#define \textbf{ RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE}~256
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ Configure\+ADC} (void)
+\item 
+void \textbf{ Configure\+DAC} (void)
+\item 
+void \textbf{ Configure\+EPWM} (void)
+\item 
+void \textbf{ Setup\+ADCEpwm} (void)
+\item 
+void \textbf{ Init\+EPwm1} (void)
+\item 
+void \textbf{ Init\+EPwm2} (void)
+\item 
+void \textbf{ Init\+EPwm5} (void)
+\item 
+interrupt void \textbf{ adca1\+\_\+isr} (void)
+\item 
+void \textbf{ \+\_\+\+TI\+\_\+stop\+\_\+pprof\+\_\+collection} (void)
+\item 
+void \textbf{ main} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Uint16 \textbf{ dac\+Output}
+\item 
+volatile Uint16 \textbf{ Load\+Torque}
+\item 
+volatile Uint16 \textbf{ Duty\+Cycle}
+\item 
+Uint16 \textbf{ results\+Index}
+\item 
+Uint16 \textbf{ period1} = \textbf{ PWM1\+\_\+\+PERIOD}
+\item 
+Uint16 \textbf{ duty\+Cycle1} = \textbf{ PWM1\+\_\+\+CMPR25}
+\item 
+Uint16 \textbf{ duty\+Cycle5} = \textbf{ PWM1\+\_\+\+CMPR25}
+\item 
+Uint16 \textbf{ phase\+Offset5} = 0
+\item 
+Uint16 \textbf{ mm\+Speed} [\textbf{ RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE}]
+\item 
+Uint16 \textbf{ ma\+Current} [\textbf{ RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE}]
+\item 
+Uint16 \textbf{ pretrig} = 0
+\item 
+Uint16 \textbf{ trigger} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\label{actuation__cpu01_8c_ab2edd9e80f626d46da6dfdad5e498d98}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!PWM1\_CMPR25@{PWM1\_CMPR25}}
+\index{PWM1\_CMPR25@{PWM1\_CMPR25}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{PWM1\_CMPR25}
+{\footnotesize\ttfamily \#define PWM1\+\_\+\+CMPR25~\textbf{ PWM1\+\_\+\+PERIOD}$>$$>$2}
+
+\mbox{\label{actuation__cpu01_8c_afbbefadd32fdc2128f595b3a52489d0b}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!PWM1\_PERIOD@{PWM1\_PERIOD}}
+\index{PWM1\_PERIOD@{PWM1\_PERIOD}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{PWM1\_PERIOD}
+{\footnotesize\ttfamily \#define PWM1\+\_\+\+PERIOD~0x\+C350}
+
+\mbox{\label{actuation__cpu01_8c_a3c830195bfb953ec4274c561498bc27b}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!RESULTS\_BUFFER\_SIZE@{RESULTS\_BUFFER\_SIZE}}
+\index{RESULTS\_BUFFER\_SIZE@{RESULTS\_BUFFER\_SIZE}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{RESULTS\_BUFFER\_SIZE}
+{\footnotesize\ttfamily \#define RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE~256}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{actuation__cpu01_8c_aa42ece96a9483f40494fd1f661271022}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!\_TI\_stop\_pprof\_collection@{\_TI\_stop\_pprof\_collection}}
+\index{\_TI\_stop\_pprof\_collection@{\_TI\_stop\_pprof\_collection}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{\_TI\_stop\_pprof\_collection()}
+{\footnotesize\ttfamily void \+\_\+\+TI\+\_\+stop\+\_\+pprof\+\_\+collection (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_a56803619a8e6f732c80736160d4c7a98}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!adca1\_isr@{adca1\_isr}}
+\index{adca1\_isr@{adca1\_isr}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{adca1\_isr()}
+{\footnotesize\ttfamily interrupt void adca1\+\_\+isr (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_aaff6c42d834bacdbea5e3f025073cf2c}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!ConfigureADC@{ConfigureADC}}
+\index{ConfigureADC@{ConfigureADC}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{ConfigureADC()}
+{\footnotesize\ttfamily void Configure\+ADC (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_af19b84111aa4d49dacaffb8534469488}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!ConfigureDAC@{ConfigureDAC}}
+\index{ConfigureDAC@{ConfigureDAC}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{ConfigureDAC()}
+{\footnotesize\ttfamily void Configure\+DAC (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_aca543fd8d4a5d97830f8ef24fecef493}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!ConfigureEPWM@{ConfigureEPWM}}
+\index{ConfigureEPWM@{ConfigureEPWM}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{ConfigureEPWM()}
+{\footnotesize\ttfamily void Configure\+EPWM (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_ab081022391ce920a78ca7e8ec2a0cdbc}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!InitEPwm1@{InitEPwm1}}
+\index{InitEPwm1@{InitEPwm1}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{InitEPwm1()}
+{\footnotesize\ttfamily void Init\+EPwm1 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_aeb79f0144db4f56a75bd4953e91aee2c}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!InitEPwm2@{InitEPwm2}}
+\index{InitEPwm2@{InitEPwm2}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{InitEPwm2()}
+{\footnotesize\ttfamily void Init\+EPwm2 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_a0fb27e1e2393f5ed0d41a0fa7e226eb3}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!InitEPwm5@{InitEPwm5}}
+\index{InitEPwm5@{InitEPwm5}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{InitEPwm5()}
+{\footnotesize\ttfamily void Init\+EPwm5 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_a6288eba0f8e8ad3ab1544ad731eb7667}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!main@{main}}
+\index{main@{main}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{main()}
+{\footnotesize\ttfamily void main (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{actuation__cpu01_8c_a3a2e8dbb2865c232fcb33748957681fc}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!SetupADCEpwm@{SetupADCEpwm}}
+\index{SetupADCEpwm@{SetupADCEpwm}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{SetupADCEpwm()}
+{\footnotesize\ttfamily void Setup\+ADCEpwm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\label{actuation__cpu01_8c_a050c4867dd214791cb5ed1aff14dfe58}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!dacOutput@{dacOutput}}
+\index{dacOutput@{dacOutput}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{dacOutput}
+{\footnotesize\ttfamily Uint16 dac\+Output}
+
+\mbox{\label{actuation__cpu01_8c_a87142bc32f16dff1aeef0bdd45437323}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!DutyCycle@{DutyCycle}}
+\index{DutyCycle@{DutyCycle}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{DutyCycle}
+{\footnotesize\ttfamily volatile Uint16 Duty\+Cycle}
+
+\mbox{\label{actuation__cpu01_8c_a2053bbf5bc651caacc7ee5fd9c207617}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!dutyCycle1@{dutyCycle1}}
+\index{dutyCycle1@{dutyCycle1}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{dutyCycle1}
+{\footnotesize\ttfamily Uint16 duty\+Cycle1 = \textbf{ PWM1\+\_\+\+CMPR25}}
+
+\mbox{\label{actuation__cpu01_8c_a7658985eebdf558fcb80efcbebf57f47}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!dutyCycle5@{dutyCycle5}}
+\index{dutyCycle5@{dutyCycle5}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{dutyCycle5}
+{\footnotesize\ttfamily Uint16 duty\+Cycle5 = \textbf{ PWM1\+\_\+\+CMPR25}}
+
+\mbox{\label{actuation__cpu01_8c_aac7e2d1f7799f628d7664724ccad4815}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!LoadTorque@{LoadTorque}}
+\index{LoadTorque@{LoadTorque}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{LoadTorque}
+{\footnotesize\ttfamily volatile Uint16 Load\+Torque}
+
+\mbox{\label{actuation__cpu01_8c_af97bed244da2ec11a1af86e313feed53}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!maCurrent@{maCurrent}}
+\index{maCurrent@{maCurrent}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{maCurrent}
+{\footnotesize\ttfamily Uint16 ma\+Current[\textbf{ RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE}]}
+
+\mbox{\label{actuation__cpu01_8c_a960934404331d15538dcef9c6a59ba70}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!mmSpeed@{mmSpeed}}
+\index{mmSpeed@{mmSpeed}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{mmSpeed}
+{\footnotesize\ttfamily Uint16 mm\+Speed[\textbf{ RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE}]}
+
+\mbox{\label{actuation__cpu01_8c_a79fd80e875d4c4477b77fee3444c3e94}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!period1@{period1}}
+\index{period1@{period1}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{period1}
+{\footnotesize\ttfamily Uint16 period1 = \textbf{ PWM1\+\_\+\+PERIOD}}
+
+\mbox{\label{actuation__cpu01_8c_acf7bb1e53c6d91d5a6ee83308b816a43}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!phaseOffset5@{phaseOffset5}}
+\index{phaseOffset5@{phaseOffset5}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{phaseOffset5}
+{\footnotesize\ttfamily Uint16 phase\+Offset5 = 0}
+
+\mbox{\label{actuation__cpu01_8c_a5d1bb28530cbfd5ff6afecda33255484}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!pretrig@{pretrig}}
+\index{pretrig@{pretrig}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{pretrig}
+{\footnotesize\ttfamily Uint16 pretrig = 0}
+
+\mbox{\label{actuation__cpu01_8c_ad4bc8efd2f5f190ad492e1a14d539d3e}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!resultsIndex@{resultsIndex}}
+\index{resultsIndex@{resultsIndex}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{resultsIndex}
+{\footnotesize\ttfamily Uint16 results\+Index}
+
+\mbox{\label{actuation__cpu01_8c_add66d8289d49c623b87239368b7be7b5}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!trigger@{trigger}}
+\index{trigger@{trigger}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{trigger}
+{\footnotesize\ttfamily Uint16 trigger = 0}
+

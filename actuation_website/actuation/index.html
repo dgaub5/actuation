@@ -1,0 +1,238 @@
+﻿<!DOCTYPE HTML>
+<!--
+	Escape Velocity by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Emulation of Aerospace Actuation Systems</title>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="homepage is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<section id="header" class="wrapper syle2">
+
+					<!-- Logo -->
+						<div id="logo">
+							<p class="logo"><img src="images/EAAS__Logo_Green-Gold.png" alt="" /></span>
+							<h1><a href="index.html">Emulation of Aerospace Actuation Systems</a></h1>
+							<p style="color:lightgray">Colorado State University Senior Design Project In Collaboration With <a style="color:lightgray" href="https://www.woodward.com/home">Woodward, Inc.</a></p>
+							<p style="color:lightgray">We meet on Mondays at 12:00PM MST in the <a style="color:lightgray" href="https://energy.colostate.edu/">Powerhouse Energy Campus</a></p>
+							<p style="color:lightgray">ㅤ</a></p>
+						</div>
+
+					<!-- Nav -->
+						<nav id="nav">
+							<ul>
+								<li class="current"><a href="index.html">Home</a></li>
+								<li><a href="Timeline.html">Timeline</a></li>
+								<li><a href="Deliverables.html">Deliverables</a></li>
+								<li><a href="Documents.html">Documents</a></li>
+								<li><a href="Demos.html">Pictures and Demos</a></li>
+								<li><a href="index.html#highlights"">About Us</a></li>
+								<li><a href="Acknowledgements.html">Acknowledgements</a></li>
+							</ul>
+						</nav>
+
+				</section>
+
+				<section id="main" class="wrapper style1">
+					<div class="title">Project Information</div>
+					<div class="container">
+
+						<!-- Image -->
+
+							<!-- Sidebar -->
+									<div id="sidebar">
+										<section class="box">
+											<ul class="style2">
+												<li>
+													<h3><a href="#">Abstract</a></h3>
+													<p>The Emulation of Aerospace Actuation Systems Project is an effort funded by <a href="https://www.woodward.com/home">Woodward, Inc.</a> to validate an electrical drive alternative to replace the pneumatically/hydraulically operated Thrust Reverser Actuation Systems (TRAS) currently deployed on commercial and military aircraft. This project will interface a TI TMS320C2000 microcontroller with an OPAL-RT real-time processor to emulate several electrically driven aerospace actuation scenarios using a controller hardware-in-the-loop (CHIL) platform. Team members will program both the TI board and the OPAL-RT system in C to read/write synchronized digital and analog signals that reflect the behavior of real mechanical motors and drive systems located in a physical testbed at the Aerospace System Emulation and Test (ASET) Lab at the CSU Powerhouse. The team will also design a printed circuit board and wiring harness to facilitate seamless interaction between the TI board and the OPAL-RT system. Finally, the team will produce a detailed system model of the code and associated hardware using the principles of Model Based Systems Engineering in Cameo Systems Modeler. The overall product to Woodward, Inc. is a well-documented system model and thoroughly tested code package that can safely interface with the ASET testbed for the next phase of project validation.</p>
+													</article>
+												</li>
+												<li>
+													<h3><a href="#">Project Background</a></h3>
+													<p>The key motivation of this senior design project is to provide the aerospace industry with more electric aircraft. More Electric Aircraft (MEA) is a concept in the aerospace industry that is driven by demands such as optimizing aircraft performance, decreasing operating and maintenance costs while also reducing fuel consumption and gas emissions (Yitao Liu et. al., 2018). This project is focused on electrifying secondary energy sources in aircraft, specifically, the currently hydraulic-driven thrust reversers on aircraft nacelle. Currently there are a few companies working on replacing the hydraulic driven thrust reversers with electric driven ones such as Honeywell and Collins Aerospace. While there are companies that have been working with similar goals, Woodward, Inc. has a long-standing position in the aerospace industry creating Thrust Reverser Actuation Systems dating back to the 1960s. With the expertise of Woodward, Inc. in combination with our senior design team, we aim to produce state of the art solutions to push the aerospace industry one step further towards fully electric aircraft. </p>
+													<p>This senior design project is a continuation project in collaboration with Woodward, Inc., with the goal of creating a testbed for validating an Electromechanical Thrust Reverser Actuation System (EM-TRAS). Previous work on this project yielded a physical testbed for emulating the EM-TRAS system, but before this testbed can be used to perform simulations, we will work on creating a validation system using a real time simulator and microcontroller to perform a Controller-Hardware-In-the-Loop (CHIL) experiment. </p>
+													</article>
+												</li>
+												<li>
+													<h3><a href="#">Constraints</a></h3>
+																										<ul>
+														✈ The TI microcontroller can only accept voltage inputs between 0-3.3 V<br> 
+														✈ The TI microcontroller operates at 50 kHZ<br> 
+														✈ The TI microcontroller requires code written in C, which a lower level language that inherently requires more rigorous coding practices and debugging<br>
+														✈ There is a lack of documentation on how to interface with and use the microcontoller, requiring the team to spend additional hours researching<br>
+														✈ The OPAL-RT interface is not well defined and has limited support<br>
+													</article></ul>
+													</article>
+												</li>
+												<li>
+													<p><b>Primary Objectives:</br></b>
+													<em>Note: These objectives are directly required by the customer for the successful completion of this project:</em><br>
+													<ul>
+														✈ Determine the analog and digital I/O requirements for the microcontroller and OPAL-RT<br>
+														✈ Develop C code for running a closed-loop CHIL experiment, where the OPAL-RT executes a real-time DC machine system model <br>
+														✈ Run the closed-loop CHIL experiment with set failure modes as described in the proprietary document and collect measurement information <br>
+														✈ Document the design steps and experimental results in a test report to be delivered to the customer<br>
+														✈ Include system requirements flow-through and design information on the CHIL platform in the existing Cameo repository for the testbed<br> 
+													</article></ul>
+													<p><b>Secondary Objectives:</br></b>
+													<em>Note: these objectives are not directly required by the customer, but are being pursued by the senior design team to increase readability and overall functionality of the end product: </em><br>
+													<ul>
+														✈ Design a Graphical User Interface (GUI) to represent the current state of the testbed during all tests as well as error codes that are flagged during these tests and the system’s real-time response to mitigate these errors <br>
+														✈ Create a script to parse through the microcontroller code and establish code coverage of all conditional branches to ensure that all code is being thoroughly tested and verified before official hand-off to the customer for interface with the physical testbed <br>
+														✈ Run a documentation tool (e.g. Doxygen) on the finished code to extract an HTML report of all code documentation and increase readability/ease of understanding for the customer upon official hand-off at the end of the project period  <br> 
+													</article>
+												</li>
+											</ul>
+										</section>
+									</div>
+
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- Highlights -->
+				<section id="highlights" class="wrapper style3">
+					<div class="title">Meet The Team</div>
+					<div class="container">
+						<div class="row aln-center">
+							<div class="col-4 col-12-medium">
+								<section class="highlight">
+									<a href="#" class="image featured"><img src="images/Kori.jpg" alt="" /></a>
+									<h1><a href="#">Kori Eliaz</a></h1>
+									<p>Kori Eliaz is a senior studying Electrical Engineering. She works part time as a systems engineering intern on the Dragonfly mission at Lockheed Martin Space and looks forward to returning to the company full time in May 2022. Kori is passionate about a career designing system architectures for deep space exploratory missions, serving in multiple outreach positions to share her love of aerospace with aspiring engineers nationwide.</p>
+									<ul class="actions">
+										<li><a href="https://www.linkedin.com/in/korieliaz" class="button style1">Kori's LinkedIn</a></li>
+									</ul>
+									<ul class="actions">
+										<li><a href="images/KoriResume.pdf" class="button style2">Kori's Resume</a></li>
+									</ul>
+								</section>
+							</div>
+							<div class="col-4 col-12-medium">
+								<section class="highlight">
+									<a href="#" class="image featured"><img src="images/Jake.jpg" alt="" /></a>
+									<h1><a href="#">Jake Dorsett</a></h1>
+									<p>Jake Dorsett is a senior at CSU  pursuing a B.S. in Electrical Engineering. He currently holds B.S. degrees in Natural Resource Management, and Forest Fire Science, but has returned to CSU to further his education and pursue a deeper knowledge of the world around him. Having 4+ years of experience and working as a lead in a small team of Geospatial Analysts, he has developed leadership skills and effective team communication skills.</p>
+									<ul class="actions">
+										<li><a href="https://www.linkedin.com/in/jakedorsett/" class="button style1">Jake's LinkedIn</a></li>
+									</ul>
+									<section class="highlight">
+								</section>
+								</section>
+							</div>
+							<div class="col-4 col-12-medium">
+								<section class="highlight">
+									<a href="#" class="image featured"><img src="images/Dylan.jpg" alt="" /></a>
+									<h1>Dylan Gaub</h1>
+									<p>Dylan Gaub is a senior studying Computer Engineering with a minor in Computer Science. Dylan is currently working part time for Seagate Technology working on PCB design and Server Automation. With a large passion for designing and building anything with PC Board design, Dylan built his first drone in the summer of 2020, and started the CSU Drone Club. With a huge passion for space, after college he is striving to work in Aerospace. </p>
+									<ul class="actions">
+										<li><a href="https://www.linkedin.com/in/dylan-gaub/" class="button style1">Dylan's LinkedIn</a></li>
+									</ul>
+									<ul class="actions">
+										<li><a href="images/DylanResume.pdf" class="button style2">Dylan's Resume</a></li>
+									</ul>
+								</section>
+							</div>
+							<div class="row aln-center">
+							<div class="col-4 col-12-medium">
+								<section class="highlight">
+									<a href="#" class="image featured"><img src="images/Cale.jpg" alt="" /></a>
+									<h1><a href="#">Project Advisor: Dr. James Cale</a></h1>
+									<p>Dr. James Cale has extensive experience in power electronic drive systems and in electromagnetic systems/devices. His background and research focuses on energy conversion, power electronics, finite-inertia power systems, computational and applied electromagnetics, biologically-inspired optimization methods, microgrids, power hardware-in-the-loop, and machine learning algorithms. James is an Associate Professor in the Systems and ECE Departments at CSU and is the President and Owner of PEMCA Consulting, LLC. Prior to joining CSU he managed the Distributed Energy Systems Integration Group at the National Renewable Energy Laboratory and worked in senior engineering roles at Advanced Energy and Orbital ATK. He earned a doctorate in electrical engineering from Purdue University and bachelors degree from Missouri University of Science and Technology (summa cum laude).</p>
+									<ul class="actions">
+										<li><a href="https://www.jamescale.com" class="button style1">Dr. Cale's Website</a></li>
+									</ul>
+								</section>
+							</div>
+							<div class="col-4 col-12-medium">
+								<section class="highlight">
+									<a href="#" class="image featured"><img src="images/Chris.jpg" alt="" /></a>
+									<h1><a href="#">Lab Advisor: Chris Lute</a></h1>
+									<p>Chris Lute is a research engineer in power systems in the CSU Systems Engineering Department (supervisor: J. Cale) where he conducts research in microgrid and minigrid power systems, with a focus on energy access for emerging markets. Chris received his B.S. in Electrical Engineering from The Pennsylvania State University and an M.S., also in Electrical Engineering, from the Colorado School of Mines, where he conducted research on novel power electronics for solar power applications. He has worked in numerous industries supporting renewable energy and microgrid power systems as a government contractor, and in the private sector working in the solar and microgrid controller industries. At Spriae, he helped to develop, test, and deploy advanced microgrid controls for San Diego Gas and Electric in California and Sigora in Haiti, among others.</p>
+									<ul class="actions">
+										<li><a href="https://www.linkedin.com/in/christopher-lute-ba5b7685/" class="button style1">Chris's LinkedIn</a></li>
+									</ul>
+									<section class="highlight">
+								</section>
+								</section>
+							</div>
+							<div class="col-4 col-12-medium">
+								<section class="highlight">
+									<a href="#" class="image featured"><img src="images/Matt.jpg" alt="" /></a>
+									<h1>EiR Mentor: Matt Heath</h1>
+									<p>Matt Heath is a Systems Engineer at Woodward Inc.; he has extensive experience in the power industry with focus on design and application for Natural Gas Turbine controls.  In the power industry his work has spanned from land-based to sea-based power plants and power distribution systems.  Matt is currently is working on thrust reversers actuation systems (TRAS) and flight controls for the aircraft industry with specific work around development for the more electric aircraft. Matt received his B.S. in Electrical Engineering from Colorado State University. </p>
+								</section>
+							</div>
+
+							</div>
+							</div>
+						</div>
+				</section>
+
+
+
+			<!-- Footer -->
+				<section id="intro" class="wrapper style2">
+					<div class="title">Additional Information</div>
+					<div class="container">
+						<div class="row aln-center">
+							<div class="col-3 col-12-medium">
+								<section class="highlight">
+									<a href="https://advancing.colostate.edu/ENG/ECE_SRDESIGN/GIVE" class="image featured"><img src="images/Support.gif" alt="" /></a>
+									<ul class="actions">
+										<!-- <li><a href="https://advancing.colostate.edu/ENG/ECE_SRDESIGN/GIVE" class="button style1">Support Our Program</a></li> --->
+									</ul>
+								</section>
+							</div>
+							<div class="col-3 col-12-medium">
+								<section class="highlight">
+									<a href="https://www.engr.colostate.edu/ece/" class="image featured"><img src="images/Dep.png" alt="" /></a>
+									<ul class="actions">
+										<!-- <li><a href="https://www.engr.colostate.edu/ece/" class="button style1">ECE Department</a></li> --->
+									</ul>
+								</section>
+							</div>
+							<div class="col-3 col-12-medium">
+								<section class="highlight">
+									<a href="https://www.engr.colostate.edu/ece/senior-design/?ay=2021" class="image featured"><img src="images/Projects.jpg" alt="" /></a>
+									<ul class="actions">
+										<!-- <li><a href="https://www.engr.colostate.edu/ECE401/AY21_senior_design_projects.php" class="button style1">Other Projects</a></li> --->
+									</ul>
+								</section>
+							</div>
+							<div class="col-3 col-12-medium">
+								<section class="highlight">
+									<a href="https://www.colostate.edu/" class="image featured"><img src="images/csu-logo.png" alt="" /></a>
+									<ul class="actions">
+										<!-- Footer <li><a href="https://www.colostate.edu/" class="button style1">CSU Website</a></li> --->
+									</ul>
+								</section>
+							</div>
+							<div class="col-3 col-12-medium">
+									<ul class="actions">
+										<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+									</ul>
+							</div>
+		</div>
+												</section>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
