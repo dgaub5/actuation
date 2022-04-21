@@ -25,8 +25,8 @@
 
     // Output Variables
     Uint16 dacOutput;               // Initialize variable for the DAC Outputs - not used (can delete?)
-    volatile Uint16 LoadTorque;    // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
-    volatile Uint16 DutyCycle;     // {0, 100}    [%]  - Load Torque in %  | {0.0 V, 3.0 V}
+    volatile float32 LoadTorque;    // {-0.2, 0.2} [Nm] - Load Torque in Nm | {0.0 V, 3.0 V}
+    volatile float32 DutyCycle;     // {0, 100}    [%]  - Load Torque in %  | {0.0 V, 3.0 V}
     Uint16 resultsIndex;            // Initialization for the results index - this is the array pointer for ADC conversions; resultsIndex increments to place new value in adjacent cell, and reset when array is full
 
 
@@ -44,15 +44,28 @@
     void InitEPwm1(void);               // Configure ePWM module 1
     void InitEPwm2(void);               // Configure ePWM module 2
     void InitEPwm5(void);               // Configure ePWM module 5
+    void PI_Loop(void);
     interrupt void adca1_isr(void);     // ADC interrupt service routine
 
     // Buffers for storing ADC conversion results
     #define RESULTS_BUFFER_SIZE 256             // Set the max buffer size of the results to 256 bits
-    Uint16 mmSpeed[RESULTS_BUFFER_SIZE];       // Allocate memory for the ADC-A registers (motor speed)
-    Uint16 maCurrent[RESULTS_BUFFER_SIZE];     // Allocate memory for the ADC-C registers (armature current)
+    float32 mmSpeed[RESULTS_BUFFER_SIZE];       // Allocate memory for the ADC-A registers (motor speed)
+    float32 maCurrent[RESULTS_BUFFER_SIZE];     // Allocate memory for the ADC-C registers (armature current)
     Uint16 resultsIndex;                        // Initialize the Results Index
     Uint16 pretrig = 0;                         // Set the value of pretrig
     Uint16 trigger = 0;                         // Set the value of trigger
+
+    // Variables for PI_Loop - Equation: d = Kp*e + Ki*(((e0+e1)/2)*delta)
+    float32 ideal_Speed = 300;  // Simulated speed of motors on test bed with a threshold of 0-1800
+    float32 mm_Speed    = 0;    // Speed value gathered from AdcaResults on each interval
+    float32 d           = 0;    // Final result from PI loop
+    float32 Kp          = 0.05;    // Proportional gain - Value for Kp in PI controller equation
+    float32 Ki          = 0.05;    // Integral gain - Value for Ki in PI controller equation
+    float32 e_dt        = 0;    // Change in e, integral part
+    float32 e           = 0;    // Error value total
+    float32 e0          = 0;    // Error value gathering 0 (Previous interval)
+    float32 e1          = 0;    // Error value gathering 1 (Current interval)
+    float32 delta       = 20;   // Change in time for each interval (1000us = 1ms) for the cycles of data gathering
 
     // Setting up data transfer for --gen_profile_info code coverage
     extern void _TI_stop_pprof_collection(void);
@@ -122,15 +135,24 @@
 
         // Infinite loop to continuously grab values being inputed
         do {
-            GpioDataRegs.GPADAT.bit.GPIO31 = 0;     // Turn on LED
-            DELAY_US(1000 * 500);                   // ON delay
-            GpioDataRegs.GPADAT.bit.GPIO31 = 1;     // Turn off LED
-            DELAY_US(1000 * 500);                   // OFF delay
-
+            DELAY_US(20);                           // Time Step
             // Send Load Torque and Duty Cycle to Opal
-            DacaRegs.DACVALS.all = LoadTorque;      // Set the value of the DAC-A Registers to Load Torque
-            DacbRegs.DACVALS.all = DutyCycle;       // Set the value of the DAC-B Registers to Duty Cycle
-            //_TI_stop_pprof_collection();            // Add a call to _TI_stop_pprof_collection at the point in which you wish to transfer the coverage data
+           DacaRegs.DACVALS.all = LoadTorque;      // Set the value of the DAC-A Registers to Load Torque
+           DacbRegs.DACVALS.all = DutyCycle;       // Set the value of the DAC-B Registers to Duty Cycle
+           //_TI_stop_pprof_collection();            // Add a call to _TI_stop_pprof_collection at the point in which you wish to transfer the coverage data
+
+
+           // Set DutyCycle to volatage ratio from PI loop (0-100)
+           // GpioDataRegs.GPADAT.bit.GPIO31 = 0;     // Turn on LED
+           // DELAY_US(1000 * 500);                   // ON delay
+           // GpioDataRegs.GPADAT.bit.GPIO31 = 1;     // Turn off LED
+
+           mm_Speed = mmSpeed[resultsIndex];  // Where 'AdcaResults[resultsIndex]' is going to be our newly defined mm_Speed in the most up to date code HSEC 15
+
+           PI_Loop();
+
+
+
         } while(1);
     }
 
@@ -282,6 +304,20 @@
        EPwm5Regs.AQCTLA.bit.CAU = 1;                // Clear PWM1A on event A, up count
     }
 
+    //Creating function for PI Loop
+    void PI_Loop(void)
+    {
+        // ideal_Speed = 300;                  // Testing with a 2 V input which equals 290.36 mm_Speed
+        e = ideal_Speed - mm_Speed;       // Current iteration error value calculation
+        e1 = e;                                // Store current value for error in iteration
+        e_dt = (((e0+e1)/2)*delta);            // Change in error value
+        d = (Kp*e) + (Ki*e_dt);                // Final result from PI loop is stored in d
+        //if (d > 100) d = 100;                  // Saturation - Duty cycle should be between 0-100
+        //if (d < 0) d = 0;
+        e0 = e;                                // Store previous error result for the next iteration
+        DutyCycle = d;
+    }
+
     // Interrupt Service Routine for ADC conversion. Triggered from EPWM2 period match using SOCA every 20us.
     interrupt void adca1_isr(void)
     {
@@ -289,9 +325,10 @@
         if (trigger != 0)
         {
             mmSpeed[resultsIndex] = 0.293 * (AdcaResultRegs.ADCRESULT0-2048);       // Store current value of ADC-A in array, scaled to {-600 to 600} [rad/s]
-            DutyCycle = AdcbResultRegs.ADCRESULT0;                                      // Update DutyCycle with ADC-B results
+            ideal_Speed = AdcbResultRegs.ADCRESULT0;                                      // Update DutyCycle with ADC-B results
             maCurrent[resultsIndex++] = 0.00122 * (AdccResultRegs.ADCRESULT0-2048);   // Store current value of ADC-C in array, scaled to {-2.5 to 2.5} [A]
             LoadTorque = AdcdResultRegs.ADCRESULT0;                                     // Update LoadTorque with ADC-D results
+
 
             if(RESULTS_BUFFER_SIZE <= resultsIndex)
             /* Reset resultsIndex once ADC arrays are full
