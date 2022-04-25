@@ -1,0 +1,530 @@
+\doxysection{actuation/cpu01/actuation\+\_\+cpu01.c File Reference}
+\label{actuation__cpu01_8c}\index{actuation/cpu01/actuation\_cpu01.c@{actuation/cpu01/actuation\_cpu01.c}}
+{\ttfamily \#include \char`\"{}F28x\+\_\+\+Project.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ Configure\+ADC} (void)
+\item 
+void \textbf{ Configure\+DAC} (void)
+\item 
+void \textbf{ Configure\+EPWM} (void)
+\item 
+void \textbf{ Setup\+ADCEpwm} (void)
+\item 
+void \textbf{ Init\+EPwm1} (void)
+\item 
+void \textbf{ Init\+EPwm2} (void)
+\item 
+void \textbf{ Init\+EPwm5} (void)
+\item 
+interrupt void \textbf{ adca1\+\_\+isr} (void)
+\item 
+void \textbf{ \+\_\+\+TI\+\_\+stop\+\_\+pprof\+\_\+collection} (void)
+\item 
+void \textbf{ main} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Uint16 \textbf{ dac\+Output}
+\item 
+volatile Uint16 \textbf{ Load\+Torque}
+\item 
+volatile Uint16 \textbf{ Duty\+Cycle}
+\item 
+Uint16 \textbf{ results\+Index}
+\item 
+Uint16 \textbf{ period1} = PWM1\+\_\+\+PERIOD
+\item 
+Uint16 \textbf{ duty\+Cycle1} = PWM1\+\_\+\+CMPR25
+\item 
+Uint16 \textbf{ duty\+Cycle5} = PWM1\+\_\+\+CMPR25
+\item 
+Uint16 \textbf{ phase\+Offset5} = 0
+\item 
+Uint16 \textbf{ mm\+Speed} [RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE]
+\item 
+Uint16 \textbf{ ma\+Current} [RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE]
+\item 
+Uint16 \textbf{ pretrig} = 0
+\item 
+Uint16 \textbf{ trigger} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{actuation__cpu01_8c_aa42ece96a9483f40494fd1f661271022}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!\_TI\_stop\_pprof\_collection@{\_TI\_stop\_pprof\_collection}}
+\index{\_TI\_stop\_pprof\_collection@{\_TI\_stop\_pprof\_collection}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{\_TI\_stop\_pprof\_collection()}
+{\footnotesize\ttfamily void \+\_\+\+TI\+\_\+stop\+\_\+pprof\+\_\+collection (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Set the value of trigger Setting up data transfer for --gen\+\_\+profile\+\_\+info code coverage \mbox{\label{actuation__cpu01_8c_a56803619a8e6f732c80736160d4c7a98}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!adca1\_isr@{adca1\_isr}}
+\index{adca1\_isr@{adca1\_isr}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{adca1\_isr()}
+{\footnotesize\ttfamily interrupt void adca1\+\_\+isr (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Configure e\+PWM module 5
+
+Interrupt Service Routine for ADC conversion. Triggered from EPWM2 period match using SOCA every 20us. Read the ADC result and store in circular buffer
+
+Store current value of ADC-\/A in array, scaled to \{-\/600 to 600\} [rad/s]
+
+Update Duty\+Cycle with ADC-\/B results
+
+Store current value of ADC-\/C in array, scaled to \{-\/2.\+5 to 2.\+5\} [A]
+
+Update Load\+Torque with ADC-\/D results
+
+Reset results\+Index once ADC arrays are full Reset pre-\/trigger and ISR trigger to 0 once arrays are full Update PWM periods and duty cycles, but this may be unnecessary, as the values do not change (?)
+
+Reset results index to 0
+
+Reset pretrig to 0
+
+Reset ISR trigger to 0
+
+Update PWMs -- Shouldn\textquotesingle{}t be necessary (?) try and remove these
+
+Set the EPwm period
+
+Set the EPwm duty cycle
+
+Set the EPwm period
+
+Set the EPwn duty cycle
+
+Set the phase offset
+
+This code identifies a low-\/to-\/high transition on PWM1A so the results buffer always starts on a rising edge. This makes phase observations between PWM1 and PWM5 clearer.
+
+Return from interrupt
+
+Clear ADC INT1 flag
+
+Acknowledge PIE group 1 to enable further interrupts\mbox{\label{actuation__cpu01_8c_aaff6c42d834bacdbea5e3f025073cf2c}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!ConfigureADC@{ConfigureADC}}
+\index{ConfigureADC@{ConfigureADC}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{ConfigureADC()}
+{\footnotesize\ttfamily void Configure\+ADC (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+PWM5 phase offset = 0 Function Prototypes
+
+Write ADC configurations and power up the ADC. ADC-\/A (mm\+Speed), ADC-\/B (ma\+Current), ADC-\/C (Duty\+Cycle), and ADC-\/D (Load\+Torque) (Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+ADC-\/A -- mm\+Speed
+
+Set ADCCLK divider to /4
+
+12-\/bit resolution
+
+Single-\/ended channel conversions (12-\/bit mode only)
+
+Set pulse positions to late
+
+Power up the ADC
+
+ADC-\/C -- ma\+Current
+
+Set ADCCLK divider to /4
+
+12-\/bit resolution RESOLUTION\+\_\+12\+BIT;
+
+Single-\/ended channel conversions (12-\/bit mode only)
+
+Set pulse positions to late
+
+Power up the ADC
+
+ADC-\/B -- Duty\+Cycle
+
+Set ADCCLK divider to /4
+
+12-\/bit resolution RESOLUTION\+\_\+12\+BIT;
+
+Single-\/ended channel conversions (12-\/bit mode only)
+
+Set pulse positions to late
+
+Power up the ADC
+
+ADC-\/D -- Load\+Torque
+
+Set ADCCLK divider to /4
+
+12-\/bit resolution RESOLUTION\+\_\+12\+BIT;
+
+Single-\/ended channel conversions (12-\/bit mode only)
+
+Set pulse positions to late
+
+Power up the ADC
+
+Using EDIS to clear the EALLOW
+
+Delay for 1ms to allow ADC time to power up\mbox{\label{actuation__cpu01_8c_af19b84111aa4d49dacaffb8534469488}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!ConfigureDAC@{ConfigureDAC}}
+\index{ConfigureDAC@{ConfigureDAC}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{ConfigureDAC()}
+{\footnotesize\ttfamily void Configure\+DAC (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Write ADC configurations and power up the ADC for both ADC-\/A and ADC-\/C
+
+Write DAC configurations and power up the DAC for both DAC-\/A and DAC-\/C (Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Use ADC references (HSEC Pin 09)
+
+Load on next SYSCLK
+
+Enable DAC
+
+Use ADC references (HSEC Pin 11)
+
+Load on next SYSCLK
+
+Enable DAC
+
+Using EDIS to clear the EALLOW\mbox{\label{actuation__cpu01_8c_aca543fd8d4a5d97830f8ef24fecef493}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!ConfigureEPWM@{ConfigureEPWM}}
+\index{ConfigureEPWM@{ConfigureEPWM}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{ConfigureEPWM()}
+{\footnotesize\ttfamily void Configure\+EPWM (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Write DAC configurations and power up the DAC for both DAC A and DAC C \mbox{\label{actuation__cpu01_8c_ab081022391ce920a78ca7e8ec2a0cdbc}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!InitEPwm1@{InitEPwm1}}
+\index{InitEPwm1@{InitEPwm1}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{InitEPwm1()}
+{\footnotesize\ttfamily void Init\+EPwm1 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Call the ADCE pulse width modulator for GPIO pins
+
+Function to initialize the Electronic Pulse Width Modulator 1. This PWM functions as a timer for ADC-\/A Setup TBCLK EPwm1\+Regs.\+TBCTL.\+bit.\+CTRMODE = 0; /$\ast$$\ast$ Count up
+
+Set timer period (20us)
+
+Disable phase loading
+
+Phase is 0
+
+Clear counter
+
+Clock ratio to SYSCLKOUT
+
+Set the clock division to 0
+
+SYNC output on CTR = 0
+
+Setup shadow register load on ZERO
+
+Set Shadow A Mode to 0
+
+Set Shadow B Mode to 0
+
+Set Load A Mode to 0
+
+Set Load B Mode to 0
+
+Set Compare values EPwm1\+Regs.\+CMPA.\+bit.\+CMPA = duty\+Cycle1; /$\ast$$\ast$ Set compare A value
+
+Set actions EPwm1\+Regs.\+AQCTLA.\+bit.\+ZRO = 2; /$\ast$$\ast$ Set PWM1A on Zero
+
+Clear PWM1A on event A, up count\mbox{\label{actuation__cpu01_8c_aeb79f0144db4f56a75bd4953e91aee2c}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!InitEPwm2@{InitEPwm2}}
+\index{InitEPwm2@{InitEPwm2}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{InitEPwm2()}
+{\footnotesize\ttfamily void Init\+EPwm2 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Configure e\+PWM module 1
+
+Function to initialize the Electronic Pulse Width Modulator 2. This PWM functions as the triggering mechanism for ADC SOC for all current ADCs (Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Assumes e\+PWM clock is already enabled EPwm2\+Regs.\+TBCTL.\+bit.\+CTRMODE = 3; /$\ast$$\ast$ Freeze counter
+
+TBCLK pre-\/scaler = /1
+
+Set period to 2000 counts (50k\+Hz)
+
+Disable SOC on A group
+
+Select SOCA on period match
+
+Enable SOCA
+
+Generate pulse on 1st event
+
+Using EDIS to clear the EALLOW\mbox{\label{actuation__cpu01_8c_a0fb27e1e2393f5ed0d41a0fa7e226eb3}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!InitEPwm5@{InitEPwm5}}
+\index{InitEPwm5@{InitEPwm5}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{InitEPwm5()}
+{\footnotesize\ttfamily void Init\+EPwm5 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Configure e\+PWM module 2
+
+Function to initialize the Electronic Pulse Width Modulator 5. This PWM functions as a timer for ADC-\/C Setup TBCLK
+
+Count up
+
+Set timer period (20us)
+
+Enable phase loading
+
+PWM5 phase offset = 0
+
+Clear counter
+
+Clock ratio to SYSCLKOUT
+
+Set Clock Division to 0
+
+Setup shadow register load on ZERO
+
+Set Shadow A Mode to 0
+
+Set Shadow B Mode to 0
+
+Set Load A Mode to 0
+
+Set Load B Mode to 0
+
+Set Compare values
+
+Set compare A value
+
+Set actions
+
+Set PWM1A on Zero
+
+Clear PWM1A on event A, up count\mbox{\label{actuation__cpu01_8c_a6288eba0f8e8ad3ab1544ad731eb7667}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!main@{main}}
+\index{main@{main}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{main()}
+{\footnotesize\ttfamily void main (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Beginning of the main section of code Initialize System Control
+
+(Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Enable Clock Configure Registers
+
+Using EDIS to clear the EALLOW
+
+Initialize GPIO
+
+Configure default GPIO
+
+Configure EPWM1 GPIO pins
+
+Configure EPWM5 GPIO pins
+
+(Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Drives LED LD2 on control\+CARD
+
+Using EDIS to clear the EALLOWs
+
+Turn off LED
+
+Clear all interrupts and initialize PIE vector table
+
+Initialize the PIE Control
+
+Set IER to 0
+
+Set IFR to 0
+
+Initialize the Pie Vector Table
+
+Map ISR functions
+
+(Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Function for ADCA interrupt 1
+
+Using EDIS to clear the EALLOW
+
+Configure the ADC and power it up
+
+Setup the ADC for e\+PWM triggered conversions on channel 0
+
+Initialize e\+PWM modules
+
+Initialize e\+PWM 1
+
+Initialize e\+PWM 2
+
+Initialize e\+PWM 5
+
+Configure DACs
+
+Initialize results buffers
+
+Set ADC-\/A current results index to 0
+
+Set ADC-\/C current results index to 0
+
+Reset the results index counter
+
+Enable global interrupts and higher priority real-\/time debug events
+
+Enable group 1 interrupts
+
+Enable Global interrupt INTM
+
+Enable Global real time interrupt DBGM
+
+Enable PIE interrupt
+
+Sync e\+PWM EALLOW; /$\ast$$\ast$ (Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Set CPU System Registers to active bit
+
+Start e\+PWM EPwm2\+Regs.\+ETSEL.\+bit.\+SOCAEN = 1; /$\ast$$\ast$ Enable SOCA
+
+Un-\/freeze and enter up-\/count mode
+
+Infinite loop to continuously grab values being inputed
+
+Turn on LED
+
+ON delay
+
+Turn off LED
+
+OFF delay
+
+Send Load Torque and Duty Cycle to Opal
+
+Set the value of the DAC-\/A Registers to Load Torque
+
+Set the value of the DAC-\/B Registers to Duty Cycle
+
+\doxyref{\+\_\+\+TI\+\_\+stop\+\_\+pprof\+\_\+collection()}{p.}{actuation__cpu01_8c_aa42ece96a9483f40494fd1f661271022}; /$\ast$$\ast$ Add a call to \+\_\+\+TI\+\_\+stop\+\_\+pprof\+\_\+collection at the point in which you wish to transfer the coverage data\mbox{\label{actuation__cpu01_8c_a3a2e8dbb2865c232fcb33748957681fc}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!SetupADCEpwm@{SetupADCEpwm}}
+\index{SetupADCEpwm@{SetupADCEpwm}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{SetupADCEpwm()}
+{\footnotesize\ttfamily void Setup\+ADCEpwm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Select the channels to convert and end of conversion flag for the Pulse Width Modulator
+
+Function to set up the ADC-\/A (mm\+Speed), ADC-\/B (ma\+Current), ADC-\/C (Duty\+Cycle), and ADC-\/D (Load\+Torque) using EPWM2 as trigger Select the channels to convert and end of conversion flag
+
+(Bit 6) — Emulation access enable bit -\/ Enable access to emulation and other protected registers
+
+Setup ADC-\/\+A2 + interrupt flag
+
+SOC0 will convert pin A2 (HSEC Pin 15)
+
+Sample window is 100 SYSCLK cycles
+
+Trigger on e\+PWM2 SOCA/C
+
+End of SOC0 will set INT1 flag
+
+Enable INT1 flag
+
+Make sure INT1 flag is cleared
+
+Setup ADC-\/\+C3
+
+SOC0 will convert pin C3 (HSEC Pin 33)
+
+Sample window is 100 SYSCLK cycles
+
+Trigger on e\+PWM2 SOCA/C
+
+Setup ADC-\/\+B1
+
+SOC0 will convert pin B0 (HSEC Pin 12)
+
+Sample window is 100 SYSCLK cycles
+
+Trigger on e\+PWM2 SOCA/C
+
+Setup ADC-\/\+D3
+
+SOC0 will convert pin D3 (HSEC Pin 36)
+
+Sample window is 100 SYSCLK cycles
+
+Trigger on e\+PWM2 SOCA/C
+
+Using EDIS to clear the EALLOW
+
+\doxysubsection{Variable Documentation}
+\mbox{\label{actuation__cpu01_8c_a050c4867dd214791cb5ed1aff14dfe58}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!dacOutput@{dacOutput}}
+\index{dacOutput@{dacOutput}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{dacOutput}
+{\footnotesize\ttfamily Uint16 dac\+Output}
+
+Output Variables \mbox{\label{actuation__cpu01_8c_a87142bc32f16dff1aeef0bdd45437323}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!DutyCycle@{DutyCycle}}
+\index{DutyCycle@{DutyCycle}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{DutyCycle}
+{\footnotesize\ttfamily volatile Uint16 Duty\+Cycle}
+
+\{-\/0.\+2, 0.\+2\} [Nm] -\/ Load Torque in Nm $\vert$ \{0.\+0 V, 3.\+0 V\} \mbox{\label{actuation__cpu01_8c_a2053bbf5bc651caacc7ee5fd9c207617}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!dutyCycle1@{dutyCycle1}}
+\index{dutyCycle1@{dutyCycle1}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{dutyCycle1}
+{\footnotesize\ttfamily Uint16 duty\+Cycle1 = PWM1\+\_\+\+CMPR25}
+
+PWM1 period = 50k\+Hz PWM \mbox{\label{actuation__cpu01_8c_a7658985eebdf558fcb80efcbebf57f47}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!dutyCycle5@{dutyCycle5}}
+\index{dutyCycle5@{dutyCycle5}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{dutyCycle5}
+{\footnotesize\ttfamily Uint16 duty\+Cycle5 = PWM1\+\_\+\+CMPR25}
+
+PWM1 duty cycle = 25\% \mbox{\label{actuation__cpu01_8c_aac7e2d1f7799f628d7664724ccad4815}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!LoadTorque@{LoadTorque}}
+\index{LoadTorque@{LoadTorque}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{LoadTorque}
+{\footnotesize\ttfamily volatile Uint16 Load\+Torque}
+
+Initialize variable for the DAC Outputs -\/ not used (can delete?) \mbox{\label{actuation__cpu01_8c_af97bed244da2ec11a1af86e313feed53}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!maCurrent@{maCurrent}}
+\index{maCurrent@{maCurrent}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{maCurrent}
+{\footnotesize\ttfamily Uint16 ma\+Current[RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE]}
+
+Allocate memory for the ADC-\/A registers (motor speed) \mbox{\label{actuation__cpu01_8c_a960934404331d15538dcef9c6a59ba70}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!mmSpeed@{mmSpeed}}
+\index{mmSpeed@{mmSpeed}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{mmSpeed}
+{\footnotesize\ttfamily Uint16 mm\+Speed[RESULTS\+\_\+\+BUFFER\+\_\+\+SIZE]}
+
+\mbox{\label{actuation__cpu01_8c_a79fd80e875d4c4477b77fee3444c3e94}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!period1@{period1}}
+\index{period1@{period1}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{period1}
+{\footnotesize\ttfamily Uint16 period1 = PWM1\+\_\+\+PERIOD}
+
+Initialization for the results index -\/ this is the array pointer for ADC conversions; results\+Index increments to place new value in adjacent cell, and reset when array is full PWM Variables \mbox{\label{actuation__cpu01_8c_acf7bb1e53c6d91d5a6ee83308b816a43}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!phaseOffset5@{phaseOffset5}}
+\index{phaseOffset5@{phaseOffset5}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{phaseOffset5}
+{\footnotesize\ttfamily Uint16 phase\+Offset5 = 0}
+
+PWM5 duty cycle = 25\% \mbox{\label{actuation__cpu01_8c_a5d1bb28530cbfd5ff6afecda33255484}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!pretrig@{pretrig}}
+\index{pretrig@{pretrig}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{pretrig}
+{\footnotesize\ttfamily Uint16 pretrig = 0}
+
+Initialize the Results Index \mbox{\label{actuation__cpu01_8c_ad4bc8efd2f5f190ad492e1a14d539d3e}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!resultsIndex@{resultsIndex}}
+\index{resultsIndex@{resultsIndex}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{resultsIndex}
+{\footnotesize\ttfamily Uint16 results\+Index}
+
+\{0, 100\} [\%] -\/ Load Torque in \% $\vert$ \{0.\+0 V, 3.\+0 V\}
+
+Allocate memory for the ADC-\/C registers (armature current) \mbox{\label{actuation__cpu01_8c_add66d8289d49c623b87239368b7be7b5}} 
+\index{actuation\_cpu01.c@{actuation\_cpu01.c}!trigger@{trigger}}
+\index{trigger@{trigger}!actuation\_cpu01.c@{actuation\_cpu01.c}}
+\doxysubsubsection{trigger}
+{\footnotesize\ttfamily Uint16 trigger = 0}
+
+Set the value of pretrig 

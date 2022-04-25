@@ -1,0 +1,200 @@
+\doxysection{actuation/cpu01/\+F2837x\+D\+\_\+\+Sys\+Ctrl.c File Reference}
+\label{_f2837x_d___sys_ctrl_8c}\index{actuation/cpu01/F2837xD\_SysCtrl.c@{actuation/cpu01/F2837xD\_SysCtrl.c}}
+{\ttfamily \#include \char`\"{}F2837x\+D\+\_\+device.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}F2837x\+D\+\_\+\+Examples.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \textbf{ STATUS\+\_\+\+FAIL}~0
+\item 
+\#define \textbf{ STATUS\+\_\+\+SUCCESS}~1
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ Init\+Sys\+Ctrl} (void)
+\item 
+void \textbf{ Init\+Peripheral\+Clocks} (void)
+\item 
+void \textbf{ Disable\+Peripheral\+Clocks} (void)
+\item 
+void \textbf{ Init\+Flash} (void)
+\item 
+void \textbf{ Flash\+Off} (void)
+\item 
+void \textbf{ Seize\+Flash\+Pump} (void)
+\item 
+void \textbf{ Release\+Flash\+Pump} (void)
+\item 
+void \textbf{ Service\+Dog} (void)
+\item 
+void \textbf{ Disable\+Dog} (void)
+\item 
+void \textbf{ Init\+Aux\+Pll} (Uint16 clock\+\_\+source, Uint16 imult, Uint16 fmult, Uint16 divsel)
+\item 
+Uint16 \textbf{ Csm\+Unlock} (void)
+\item 
+void \textbf{ Sys\+Int\+Osc1\+Sel} (void)
+\item 
+void \textbf{ Sys\+Int\+Osc2\+Sel} (void)
+\item 
+void \textbf{ Sys\+Xtal\+Osc\+Sel} (void)
+\item 
+void \textbf{ Aux\+Int\+Osc2\+Sel} (void)
+\item 
+void \textbf{ Aux\+Xtal\+Osc\+Sel} (void)
+\item 
+void \textbf{ Aux\+Aux\+Clk\+Sel} (void)
+\item 
+void \textbf{ IDLE} (void)
+\item 
+void \textbf{ STANDBY} (void)
+\item 
+void \textbf{ HALT} (void)
+\item 
+void \textbf{ HIB} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a9024ed05f7df784637ef7b44ca8caf97}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!STATUS\_FAIL@{STATUS\_FAIL}}
+\index{STATUS\_FAIL@{STATUS\_FAIL}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{STATUS\_FAIL}
+{\footnotesize\ttfamily \#define STATUS\+\_\+\+FAIL~0}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_ae56fdb340b23940f7a64ed2e37c1774a}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!STATUS\_SUCCESS@{STATUS\_SUCCESS}}
+\index{STATUS\_SUCCESS@{STATUS\_SUCCESS}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{STATUS\_SUCCESS}
+{\footnotesize\ttfamily \#define STATUS\+\_\+\+SUCCESS~1}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a496d220f428afab438b093f63036625a}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!AuxAuxClkSel@{AuxAuxClkSel}}
+\index{AuxAuxClkSel@{AuxAuxClkSel}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{AuxAuxClkSel()}
+{\footnotesize\ttfamily void Aux\+Aux\+Clk\+Sel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a01c61a826adaf0956f1cadf1cf513cb1}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!AuxIntOsc2Sel@{AuxIntOsc2Sel}}
+\index{AuxIntOsc2Sel@{AuxIntOsc2Sel}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{AuxIntOsc2Sel()}
+{\footnotesize\ttfamily void Aux\+Int\+Osc2\+Sel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a130bcafe16f816bd54390295bd71df37}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!AuxXtalOscSel@{AuxXtalOscSel}}
+\index{AuxXtalOscSel@{AuxXtalOscSel}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{AuxXtalOscSel()}
+{\footnotesize\ttfamily void Aux\+Xtal\+Osc\+Sel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a5969da080723ffb6a69f29aa7b53dcd1}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!CsmUnlock@{CsmUnlock}}
+\index{CsmUnlock@{CsmUnlock}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{CsmUnlock()}
+{\footnotesize\ttfamily Uint16 Csm\+Unlock (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_aecfa6e351779dbb2aed2ff491ce907ce}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!DisableDog@{DisableDog}}
+\index{DisableDog@{DisableDog}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{DisableDog()}
+{\footnotesize\ttfamily void Disable\+Dog (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a6bc7421495cae02a7d7aadee882eeb28}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!DisablePeripheralClocks@{DisablePeripheralClocks}}
+\index{DisablePeripheralClocks@{DisablePeripheralClocks}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{DisablePeripheralClocks()}
+{\footnotesize\ttfamily void Disable\+Peripheral\+Clocks (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a07d5487ba1355a062dfaa5e959282379}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!FlashOff@{FlashOff}}
+\index{FlashOff@{FlashOff}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{FlashOff()}
+{\footnotesize\ttfamily void Flash\+Off (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a5b49f43507869e85f0cd17ad7b2d4f2a}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!HALT@{HALT}}
+\index{HALT@{HALT}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{HALT()}
+{\footnotesize\ttfamily void HALT (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a99a0d369fa443d778a3425cd356c471c}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!HIB@{HIB}}
+\index{HIB@{HIB}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{HIB()}
+{\footnotesize\ttfamily void HIB (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a2aa508ab57881599413827b6c34af9a2}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!IDLE@{IDLE}}
+\index{IDLE@{IDLE}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{IDLE()}
+{\footnotesize\ttfamily void IDLE (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_ad1210d15280256c3f4f67df45f1956b9}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!InitAuxPll@{InitAuxPll}}
+\index{InitAuxPll@{InitAuxPll}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{InitAuxPll()}
+{\footnotesize\ttfamily void Init\+Aux\+Pll (\begin{DoxyParamCaption}\item[{Uint16}]{clock\+\_\+source,  }\item[{Uint16}]{imult,  }\item[{Uint16}]{fmult,  }\item[{Uint16}]{divsel }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_acfb15ebe58549117d808383513ee5cc8}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!InitFlash@{InitFlash}}
+\index{InitFlash@{InitFlash}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{InitFlash()}
+{\footnotesize\ttfamily void Init\+Flash (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a17c664e03a629dcb5c59b71cf5ba6e9c}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!InitPeripheralClocks@{InitPeripheralClocks}}
+\index{InitPeripheralClocks@{InitPeripheralClocks}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{InitPeripheralClocks()}
+{\footnotesize\ttfamily void Init\+Peripheral\+Clocks (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a881937c4bb55a2120533f2e80dcea828}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!InitSysCtrl@{InitSysCtrl}}
+\index{InitSysCtrl@{InitSysCtrl}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{InitSysCtrl()}
+{\footnotesize\ttfamily void Init\+Sys\+Ctrl (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a5c07c65ec2171ba26c524893453b57e8}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!ReleaseFlashPump@{ReleaseFlashPump}}
+\index{ReleaseFlashPump@{ReleaseFlashPump}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{ReleaseFlashPump()}
+{\footnotesize\ttfamily void Release\+Flash\+Pump (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a925babc12ce633fbbc162d04faf5cee8}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!SeizeFlashPump@{SeizeFlashPump}}
+\index{SeizeFlashPump@{SeizeFlashPump}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{SeizeFlashPump()}
+{\footnotesize\ttfamily void Seize\+Flash\+Pump (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_aa5e4faa42368a6024ce1b6b65a16d948}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!ServiceDog@{ServiceDog}}
+\index{ServiceDog@{ServiceDog}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{ServiceDog()}
+{\footnotesize\ttfamily void Service\+Dog (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a2a4754be3fc614be13a491b4ceb19d5e}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!STANDBY@{STANDBY}}
+\index{STANDBY@{STANDBY}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{STANDBY()}
+{\footnotesize\ttfamily void STANDBY (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_a437ba03019428ea3caf00c6701f3ed2f}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!SysIntOsc1Sel@{SysIntOsc1Sel}}
+\index{SysIntOsc1Sel@{SysIntOsc1Sel}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{SysIntOsc1Sel()}
+{\footnotesize\ttfamily void Sys\+Int\+Osc1\+Sel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_abc7121b9c44a6b7b42bdb46be52c3f94}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!SysIntOsc2Sel@{SysIntOsc2Sel}}
+\index{SysIntOsc2Sel@{SysIntOsc2Sel}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{SysIntOsc2Sel()}
+{\footnotesize\ttfamily void Sys\+Int\+Osc2\+Sel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\label{_f2837x_d___sys_ctrl_8c_af3f5941b38d4dae8537674fac61ba212}} 
+\index{F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}!SysXtalOscSel@{SysXtalOscSel}}
+\index{SysXtalOscSel@{SysXtalOscSel}!F2837xD\_SysCtrl.c@{F2837xD\_SysCtrl.c}}
+\doxysubsubsection{SysXtalOscSel()}
+{\footnotesize\ttfamily void Sys\+Xtal\+Osc\+Sel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
